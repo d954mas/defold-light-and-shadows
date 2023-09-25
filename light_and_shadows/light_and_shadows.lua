@@ -19,16 +19,6 @@ local BUFFER_RESOLUTION = 2048 -- Size of shadow map. Select value from: 1024/20
 local PROJECTION_RESOLUTION = 400 
 
 function light_and_shadows.create_depth_buffer(w,h)
-    local color_params = {
-        -- format     = render.FORMAT_RGBA,
-        format     = render.FORMAT_R32F,
-        width      = w,
-        height     = h,
-        min_filter = render.FILTER_NEAREST,
-        mag_filter = render.FILTER_NEAREST,
-        u_wrap     = render.WRAP_CLAMP_TO_EDGE,
-        v_wrap     = render.WRAP_CLAMP_TO_EDGE }
-
         local depth_params = { 
             format        = render.FORMAT_DEPTH,
             width         = w,
@@ -36,9 +26,10 @@ function light_and_shadows.create_depth_buffer(w,h)
             min_filter    = render.FILTER_NEAREST,
             mag_filter    = render.FILTER_NEAREST,
             u_wrap        = render.WRAP_CLAMP_TO_EDGE,
-            v_wrap        = render.WRAP_CLAMP_TO_EDGE }
+            v_wrap        = render.WRAP_CLAMP_TO_EDGE,
+            flags  = render.TEXTURE_BIT }
 
-    return render.render_target("shadow_buffer", {[render.BUFFER_COLOR_BIT] = color_params, [render.BUFFER_DEPTH_BIT] = depth_params })
+    return render.render_target("shadow_buffer", { [render.BUFFER_DEPTH_BIT] = depth_params })
 end
 
 
@@ -133,7 +124,7 @@ function light_and_shadows.render_shadows(self)
     render.disable_state(render.STATE_BLEND)
     render.disable_state(render.STATE_CULL_FACE)
 
-    render.set_render_target(self.shadowmap_buffer, { transient = {render.BUFFER_DEPTH_BIT} })
+    render.set_render_target(self.shadowmap_buffer)
     render.clear({[render.BUFFER_COLOR_BIT] = vmath.vector4(0,0,0,1), [render.BUFFER_DEPTH_BIT] = 1})
     render.enable_material("shadow")
     --  All objects in render list taged as "shadow" will change their material to "shadow.material"

@@ -63,7 +63,7 @@ function update(self)
     render.enable_state(render.STATE_DEPTH_TEST)
     render.set_depth_mask(true)
     if light_and_shadows.shadow_quality <  3 then
-        render.enable_texture(1, self.shadowmap_buffer, render.BUFFER_COLOR_BIT) -- created in light_and_shadows.init
+        render.enable_texture(1, self.shadowmap_buffer, render.BUFFER_DEPTH_BIT) -- created in light_and_shadows.init
     end
     if light_and_shadows.shadow_quality == 2 then render.enable_material("model_low")
     elseif light_and_shadows.shadow_quality == 3 then render.enable_material("model_extra_low") end
